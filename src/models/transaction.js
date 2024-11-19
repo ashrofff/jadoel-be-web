@@ -86,6 +86,15 @@ export const getHistoryTransaction = async (userId) => {
     },
   });
 };
+
+export const getHistoryTransactionPending = async (userId) => {
+  return prisma.transaction.findFirst({
+    where: {
+      userId,
+      status: 1,
+    }
+  });
+};
 export const getTransactionById = async (transactionId) => {
   return prisma.transaction.findFirst({
     where: {
