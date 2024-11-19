@@ -177,7 +177,7 @@ function LayoutAdmin({ children, title }) {
                     <IconButton onClick={handleDrawerClose}>
                         <ChevronLeftIcon />
                     </IconButton>
-                    <Typography variant="h6" color='black' fontWeight={700} className='text-start'>AbuNet</Typography>
+                    <Typography variant="h6" color='black' fontWeight={700} className='text-start'>Jadoel</Typography>
                 </DrawerHeader>
                 <Divider />
                 {menuItems.map((group, groupIndex) => (

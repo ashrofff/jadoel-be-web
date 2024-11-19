@@ -68,7 +68,7 @@ const LoginPage = () => {
           </Typography>
           <Typography variant="h5" component="div"></Typography>
           <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-            Masuk ke AbuNet
+            Masuk ke Jadoel
           </Typography>
           <div className="h-4" />
           <div variant="body2" className="w-full flex flex-col gap-4">
