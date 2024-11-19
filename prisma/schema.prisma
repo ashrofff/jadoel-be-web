@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  adminId      String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  password     String
+  refreshToken String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+}
+
+model User {
+  userId       String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  address      String?
+  picture      String?
+  phone        String?
+  password     String
+  status       Int
+  refreshToken String?
+  isDeleted    Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+  carts        Cart[]
+  transactions Transaction[]
+}
+
+model Item {
+  itemId      String   @id @default(uuid())
+  name        String
+  description String
+  price       Decimal
+  image       String
+  isAvailable Boolean  @default(true)
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  carts       Cart[]
+}
+
+model Cart {
+  cartId    String   @id @default(uuid())
+  userId    String
+  itemId    String
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  item      Item     @relation(fields: [itemId], references: [itemId])
+  user      User     @relation(fields: [userId], references: [userId])
+}
+
+model Transaction {
+  transactionId String            @id @default(uuid())
+  userId        String
+  totalAmount   Decimal
+  status        Int               @default(1) // 1 = pending, 2 = paid, 3 = deliver, 4 = delivered, 5 = cancel 
+  snapTokenMT   String            @default("")
+  redirectUrlMT String            @default("")
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @default(now()) @updatedAt
+  user          User              @relation(fields: [userId], references: [userId])
+  items         TransactionItem[]
+}
+
+model TransactionItem {
+  transactionItemId String      @id @default(uuid())
+  transactionId     String
+  itemName          String
+  itemPrice         Decimal
+  quantity          Int
+  createdAt         DateTime    @default(now())
+  transaction       Transaction @relation(fields: [transactionId], references: [transactionId])
+}
