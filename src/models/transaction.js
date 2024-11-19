@@ -8,16 +8,12 @@ export async function getAllTransactions() {
   });
 }
 
-export const makeTransaction = async (
-  userId,
-  totalPrice,
-  transactionItems
-) => {
+export const makeTransaction = async (userId, totalPrice, transactionItems) => {
   return prisma.transaction.create({
     data: {
       userId,
       totalAmount: totalPrice,
-      status: 1, 
+      status: 1,
       snapTokenMT: "",
       redirectUrlMT: "",
       items: {
@@ -31,38 +27,72 @@ export const makeTransaction = async (
   });
 };
 
-export const midtransTransaction = async (transactionId, snapTokenMT, redirectUrlMT) => {
-    return prisma.transaction.update({
-        where: {
-            transactionId
-        },
-        data: {
-            snapTokenMT,
-            redirectUrlMT,
-        }
-    });
-}
+export const midtransTransaction = async (
+  transactionId,
+  snapTokenMT,
+  redirectUrlMT
+) => {
+  return prisma.transaction.update({
+    where: {
+      transactionId,
+    },
+    data: {
+      snapTokenMT,
+      redirectUrlMT,
+    },
+  });
+};
 export const findPendingTransaction = async (userId) => {
-    return prisma.transaction.findFirst({
-      where: {
-        userId,
-        status: 1, // Status 1 = pending
-      },
-    });
-  };
-  
-  
+  return prisma.transaction.findFirst({
+    where: {
+      userId,
+      status: 1, // Status 1 = pending
+    },
+  });
+};
 
 export const updateTransactionStatus = async (orderId, status) => {
-    return prisma.transaction.updateMany({
-      where: {
-        orderId,
-      },
-      data: {
-        status,
-      },
-    });
-  };
-  
+  return prisma.transaction.updateMany({
+    where: {
+      orderId,
+    },
+    data: {
+      status,
+    },
+  });
+};
 
+export const paidTransaction = async (transactionId, startedAt, paidAt) => {
+  return prisma.transaction.update({
+    where: {
+      transactionId,
+    },
+    data: {
+      status: 2,
+    },
+  });
+};
 
+export const getHistoryTransaction = async (userId) => {
+  return prisma.transaction.findMany({
+    where: {
+      userId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      items: true,
+    },
+  });
+};
+export const getTransactionById = async (transactionId) => {
+  return prisma.transaction.findFirst({
+    where: {
+      transactionId,
+    },
+    include: {
+      items: true,
+    },
+  });
+};

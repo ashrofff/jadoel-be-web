@@ -87,18 +87,18 @@ async function handler(req, res) {
       // Buat order_id unik untuk transaksi
       const order_id = `ORDER-${Date.now()}}`;
 
+      
+      console.log(cartItems);
+      
+      // Simpan transaksi ke database
+      const transaction = await makeTransaction(userId, gross_amount, cartItems);
+      
       // Kirim transaksi ke Midtrans
-      const pay = await midtransCheckout(order_id, gross_amount, item_details);
+      const pay = await midtransCheckout(transaction.transactionId, gross_amount, item_details);
 
       if (pay instanceof Error) {
         return res.status(400).json(resClientError(pay.message));
       }
-
-      console.log(cartItems);
-
-      // Simpan transaksi ke database
-      const transaction = await makeTransaction(userId, gross_amount, cartItems);
-
       const mtTrans = await midtransTransaction(
         transaction.transactionId,
         pay.token,

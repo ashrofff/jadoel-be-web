@@ -25,7 +25,7 @@ model User {
   picture      String?
   phone        String?
   password     String
-  status       Int
+  status       Int           @default(1)
   refreshToken String?
   isDeleted    Boolean       @default(false)
   createdAt    DateTime      @default(now())
