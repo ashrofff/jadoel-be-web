@@ -51,10 +51,10 @@ export const findPendingTransaction = async (userId) => {
   });
 };
 
-export const updateTransactionStatus = async (orderId, status) => {
+export const updateTransactionStatus = async (transactionId, status) => {
   return prisma.transaction.updateMany({
     where: {
-      orderId,
+      transactionId,
     },
     data: {
       status,
