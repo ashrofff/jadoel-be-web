@@ -58,25 +58,26 @@ async function handler(req, res) {
   try {
     if (req.method === "GET") {
       const transactionsUpdate = await getHistoryTransactionPending(userId);
+      if (transactionsUpdate) {
+        const [mtCheck] = await Promise.all([
+          midtransCheck(transactionsUpdate.transactionId),
+        ]);
+        if (mtCheck instanceof Error) {
+          return res.status(500).json(resServerError());
+        }
 
-      const [mtCheck] = await Promise.all([
-        midtransCheck(transactionsUpdate.transactionId),
-      ]);
-      if (mtCheck instanceof Error) {
-        return res.status(500).json(resServerError());
-      }
-
-      const { transaction_status, status_code, settlement_time } = mtCheck;
-      if (
-        status_code &&
-        transaction_status &&
-        settlement_time &&
-        status_code === "200" &&
-        transaction_status === "settlement"
-      ) {
-        console.log("hitted");
-        const ts = await paidTransaction(transactionsUpdate.transactionId);
-        console.log(ts);
+        const { transaction_status, status_code, settlement_time } = mtCheck;
+        if (
+          status_code &&
+          transaction_status &&
+          settlement_time &&
+          status_code === "200" &&
+          transaction_status === "settlement"
+        ) {
+          console.log("hitted");
+          const ts = await paidTransaction(transactionsUpdate.transactionId);
+          console.log(ts);
+        }
       }
 
       const transactions = await getHistoryTransaction(userId);
