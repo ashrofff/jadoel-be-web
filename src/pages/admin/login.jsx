@@ -23,7 +23,7 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const router = useRouter();
 
-  const redirect = router.query.redirect || "/admin/dashboard";
+  const redirect = router.query.redirect || "/admin/transaksi";
 
   const handleLogin = async () => {
     if (loading) return;

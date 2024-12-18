@@ -20,7 +20,7 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { MdOutlineDashboard } from "react-icons/md";
+import { MdOutlineDashboard, MdSettings } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { MdSignalWifiStatusbarConnectedNoInternet4 } from "react-icons/md";
 import { MdOutlinePlaylistAdd } from "react-icons/md";
@@ -134,9 +134,8 @@ function LayoutAdmin({ children, title }) {
 
     const menuItems = [
         [
-            { text: 'Konfigurasi', icon: <MdOutlineDashboard />, href: '/admin/konfigurasi' },
             { text: 'Profile', icon: <CgProfile />, href: '/admin/profile' },
-            // { text: 'Informasi Cakupan Wilayah', icon: <GrMapLocation />, href: '/admin/wilayah' },
+            { text: 'Konfigurasi', icon: <MdSettings />, href: '/admin/konfigurasi' },
         ],
         [
             { text: 'Daftar Produk', icon: <TbBrandProducthunt />, href: '/admin/produk' },
