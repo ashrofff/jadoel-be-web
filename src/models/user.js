@@ -5,9 +5,9 @@ export const getAllUsers = async () => {
         orderBy: {
             createdAt: "desc",
         },
-        // where: {
-        //     isDeleted: false
-        // }
+        where: {
+            isDeleted: false
+        }
     });
 }
 

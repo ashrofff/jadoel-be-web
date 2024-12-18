@@ -32,6 +32,7 @@ model User {
   updatedAt    DateTime      @default(now()) @updatedAt
   carts        Cart[]
   transactions Transaction[]
+  userShipping UserShipping?
 }
 
 model Item {
@@ -62,6 +63,7 @@ model Transaction {
   transactionId String            @id @default(uuid())
   userId        String
   totalAmount   Decimal
+  shipmentFee   Decimal
   status        Int               @default(1) // 1 = pending, 2 = paid, 3 = deliver, 4 = delivered, 5 = cancel 
   snapTokenMT   String            @default("")
   redirectUrlMT String            @default("")
@@ -79,4 +81,25 @@ model TransactionItem {
   quantity          Int
   createdAt         DateTime    @default(now())
   transaction       Transaction @relation(fields: [transactionId], references: [transactionId])
+}
+
+model StoreConfig {
+  shippingId     String   @id @default(uuid())
+  longitudeStore String
+  latitudeStore  String
+  costPerKm      Decimal
+  phoneStore     String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+}
+
+model UserShipping {
+  userShippingId String   @id @default(uuid())
+  userId         String   @unique
+  address        String
+  longitude      String   @default("")
+  latitude       String   @default("")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  user           User     @relation(fields: [userId], references: [userId])
 }

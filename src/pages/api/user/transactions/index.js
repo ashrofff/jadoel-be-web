@@ -22,13 +22,7 @@ import {
   getHistoryTransactionPending,
 } from "@/models/transaction";
 
-const date = new Date();
 
-const oneDayAfter = (date) => {
-  const newDate = new Date(date);
-  newDate.setDate(date.getDate() + 1);
-  return newDate;
-};
 
 const midtransCheck = async (order_id) => {
   try {

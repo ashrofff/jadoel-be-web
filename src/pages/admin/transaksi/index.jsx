@@ -149,24 +149,12 @@ const TransactionPage = () => {
                         <Typography>{item.user.name}</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className="font-bold">
-                          {item.packageName}
+                        <Typography className="font-bold"></Typography>
+                        <Typography>
+                          {formatRupiah(item.totalAmount)}
                         </Typography>
-                        <Typography>{formatRupiah(item.totalPrice)}</Typography>
                       </TableCell>
-                      <TableCell>
-                        {item?.status === "CANCELLED" ? (
-                          <span className="text-gray-500">
-                            Transaksi Dibatalkan
-                          </span>
-                        ) : item?.status === "UNPAID" ? (
-                          <span className="text-yellow-500">Belum Dibayar</span>
-                        ) : item?.status === "PAID" ? (
-                          <span className="text-green-500">Sudah Dibayar</span>
-                        ) : (
-                          <span className="text-red-500">Kadaluarsa</span>
-                        )}
-                      </TableCell>
+                      <TableCell>{item.status}</TableCell>
                       <TableCell>{formatDate(item.createdAt)}</TableCell>
                       <TableCell align="right">
                         <Button

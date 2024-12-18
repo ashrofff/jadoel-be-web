@@ -5,17 +5,27 @@ import {
   resSuccess,
 } from "@/helper/response";
 import userAuth from "@/middleware/userAuth";
-import { checkCart, addItemToCart, updateQuantity, getCartById } from "@/models/cart";
+import {
+  checkCart,
+  addItemToCart,
+  updateQuantity,
+  getCartById,
+} from "@/models/cart";
+
 
 async function handler(req, res) {
   try {
     if (req.method === "GET") {
+
       const cartItems = await getCartById();
-      return res.status(200).json(resSuccess("Data Keranjang", cartItems));
+
+      return res
+        .status(200)
+        .json(resSuccess("Data Keranjang", cartItems));
     }
     if (req.method === "DELETE") {
-        const { itemId} = req.body;
-        const { userId } = req.decoded;
+      const { itemId } = req.body;
+      const { userId } = req.decoded;
       const cartItems = await getCartById();
       return res.status(200).json(resSuccess("Data Keranjang", cartItems));
     }

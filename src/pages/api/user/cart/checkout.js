@@ -19,6 +19,11 @@ import {
   findPendingTransaction,
 } from "@/models/transaction";
 import axios from "axios";
+import { getUserShipping } from "@/models/userShipping";
+
+import { getStoreConfig } from "@/models/storeConfig";
+
+import hitungOngkir from "@/helper/shippingFee";
 
 const midtransCheckout = async (order_id, gross_amount, item_details) => {
   try {
@@ -55,6 +60,29 @@ async function handler(req, res) {
 
   try {
     if (req.method === "POST") {
+      const userShipping = await getUserShipping(userId);
+
+      if (!userShipping) {
+        return res
+          .status(400)
+          .json(resClientError("Data pengiriman tidak ditemukan"));
+      }
+
+      const { longitude, latitude } = userShipping;
+      if (!longitude || !latitude) {
+        return res
+          .status(400)
+          .json(resClientError("Lengkapi data pengiriman terlebih dahulu"));
+      }
+      const storeConfig = await getStoreConfig();
+      const ongkir = hitungOngkir(
+        latitude,
+        longitude,
+        storeConfig.latitudeStore,
+        storeConfig.longitudeStore,
+        storeConfig.costPerKm
+      );
+
       // Cek apakah ada transaksi pending untuk user ini
       const pendingTransaction = await findPendingTransaction(userId);
       if (pendingTransaction) {
@@ -79,6 +107,14 @@ async function handler(req, res) {
         subtotal: cartItem.quantity * parseInt(cartItem.item.price, 10),
       }));
 
+      item_details.push({
+        id: "SHIPPING",
+        name: "Ongkos Kirim",
+        quantity: 1,
+        price: ongkir,
+        subtotal: ongkir,
+      });
+
       const gross_amount = item_details.reduce(
         (total, item) => total + item.subtotal,
         0
@@ -87,14 +123,20 @@ async function handler(req, res) {
       // Buat order_id unik untuk transaksi
       const order_id = `ORDER-${Date.now()}}`;
 
-      
-      console.log(cartItems);
-      
       // Simpan transaksi ke database
-      const transaction = await makeTransaction(userId, gross_amount, cartItems);
-      
+      const transaction = await makeTransaction(
+        userId,
+        gross_amount,
+        cartItems,
+        ongkir
+      );
+
       // Kirim transaksi ke Midtrans
-      const pay = await midtransCheckout(transaction.transactionId, gross_amount, item_details);
+      const pay = await midtransCheckout(
+        transaction.transactionId,
+        gross_amount,
+        item_details
+      );
 
       if (pay instanceof Error) {
         return res.status(400).json(resClientError(pay.message));

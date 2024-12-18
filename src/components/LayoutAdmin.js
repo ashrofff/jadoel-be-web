@@ -134,16 +134,16 @@ function LayoutAdmin({ children, title }) {
 
     const menuItems = [
         [
-            { text: 'Dashboard', icon: <MdOutlineDashboard />, href: '/admin/dashboard' },
+            { text: 'Konfigurasi', icon: <MdOutlineDashboard />, href: '/admin/konfigurasi' },
             { text: 'Profile', icon: <CgProfile />, href: '/admin/profile' },
             // { text: 'Informasi Cakupan Wilayah', icon: <GrMapLocation />, href: '/admin/wilayah' },
         ],
         [
             { text: 'Daftar Produk', icon: <TbBrandProducthunt />, href: '/admin/produk' },
-            // { text: 'Daftar Pengguna', icon: <BsPeopleFill />, href: '/admin/pengguna' },
+            { text: 'Daftar Pengguna', icon: <BsPeopleFill />, href: '/admin/pengguna' },
         ],
         [
-            // { text: 'Riwayat Transaksi', icon: <TbTransactionDollar />, href: '/admin/transaksi' },
+            { text: 'Riwayat Transaksi', icon: <TbTransactionDollar />, href: '/admin/transaksi' },
         ],
         [
             { text: 'Keluar', icon: <RiLogoutBoxRFill />, href: '/admin/logout' },

@@ -4,16 +4,23 @@ export async function getAllTransactions() {
   return prisma.transaction.findMany({
     include: {
       items: true,
+      user: true,
     },
   });
 }
 
-export const makeTransaction = async (userId, totalPrice, transactionItems) => {
+export const makeTransaction = async (
+  userId,
+  totalPrice,
+  transactionItems,
+  shipmentFee
+) => {
   return prisma.transaction.create({
     data: {
       userId,
       totalAmount: totalPrice,
       status: 1,
+      shipmentFee: shipmentFee,
       snapTokenMT: "",
       redirectUrlMT: "",
       items: {
@@ -102,7 +109,7 @@ export const getHistoryTransactionPending = async (userId) => {
     where: {
       userId,
       status: 1,
-    }
+    },
   });
 };
 export const getTransactionById = async (transactionId) => {
@@ -112,6 +119,7 @@ export const getTransactionById = async (transactionId) => {
     },
     include: {
       items: true,
+      user: true,
     },
   });
 };

@@ -25,9 +25,9 @@ import { useEffect, useState } from "react";
 const columns = [
   { label: "No", minWidth: 50 },
   { label: "Nama", minWidth: 200 },
-  { label: "Total Transaksi", minWidth: 50 },
-  { label: "Status Pemasangan", minWidth: 200 },
-  { label: "Status Langganan", minWidth: 200 },
+  { label: "Nomor Telepon", minWidth: 200 },
+  { label: "Alamat", minWidth: 50 },
+  { label: "Status Pengguna", minWidth: 200 },
   { label: "Terdaftar Pada", minWidth: 100 },
   {
     label: "Aksi",
@@ -42,6 +42,8 @@ const UserPage = () => {
   // HANDLING NOTIFICATION
   const [successNotify, setSuccessNotify] = useState(null);
   const [errorNotify, setErrorNotify] = useState(null);
+
+  const [selectedId, setSelectedId] = useState("");
 
   useEffect(() => {
     if (successNotify) {
@@ -86,7 +88,7 @@ const UserPage = () => {
 
   const handleDelete = async () => {
     try {
-      await axiosInstance.delete(`/userId/${selectedId}`);
+      await axiosInstance.delete(`/users/${selectedId}`);
       setData(data.filter((item) => item.userId !== selectedId));
       setSuccessNotify("Berhasil menghapus data");
     } catch (error) {
@@ -184,37 +186,25 @@ const UserPage = () => {
                         </Typography>
                         <Typography>{item.email}</Typography>
                       </TableCell>
-                      <TableCell>{item._count.transactions}</TableCell>
-                      <TableCell>
-                        {item.isAttached ? "Terpasang" : "Belum Terpasang"}
-                      </TableCell>
+                      <TableCell>{item.phone}</TableCell>
+                      <TableCell>{item.address}</TableCell>
                       <TableCell>
                         <span
                           className={`text-center mx-auto text-${
-                            item?.subscriptionStatus === "NOT_SUBSCRIBED"
+                            item?.status === "Nonaktif"
                               ? "gray-500"
-                              : item?.subscriptionStatus === "SUBSCRIBED"
+                              : item?.status === "Aktif"
                               ? "green-500"
-                              : item?.subscriptionStatus === "NEED_RENEWAL"
-                              ? "yellow-500"
-                              : item?.subscriptionStatus === "OVERDUE"
+                              : item?.status === "Undefined"
                               ? "red-500"
                               : ""
                           }`}
                         >
-                          {item?.subscriptionStatus === "NOT_SUBSCRIBED"
-                            ? "Tidak Berlangganan"
-                            : item?.subscriptionStatus === "SUBSCRIBED"
-                            ? "Berlangganan"
-                            : item?.subscriptionStatus === "NEED_RENEWAL"
-                            ? "Butuh Perpanjangan"
-                            : item?.subscriptionStatus === "OVERDUE"
-                            ? "Terlambat Pembayaran"
-                            : ""}
+                          {item.status}
                         </span>
                       </TableCell>
                       <TableCell>{formatDate(item.createdAt)}</TableCell>
-                      <TableCell align="right" className="flex gap-2">
+                      <TableCell align="right" className="">
                         <Button
                           color="primary"
                           variant="contained"
@@ -227,6 +217,7 @@ const UserPage = () => {
                         <Button
                           color="error"
                           variant="contained"
+                          className="ml-2"
                           onClick={(event) => {
                             setConfirmDelete(event.currentTarget);
                             setSelectedId(item.userId);
